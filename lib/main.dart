@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> _colors = [];
   TextEditingController _favColor = new TextEditingController();
-  final CollectionReference colorListDB = FirebaseFirestore.instance.collection('COLORS');
+  CollectionReference colorListDB = FirebaseFirestore.instance.collection('COLORS');
 
   void _actionButtonClick() {
     setState(() {
