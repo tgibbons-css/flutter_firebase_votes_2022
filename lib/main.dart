@@ -59,28 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
             'What is your favorite color?',
             style: Theme.of(context).textTheme.headline4,
           ),
-          Row(
-            children: [
-              Text('Enter your color:  '),
-              SizedBox(child: TextField(controller: _favColor,), width: 200,),
-              ElevatedButton(
-                  onPressed: _voteButtonClick,
-                  child: Text('Vote'))
-            ],
-          ),
+          voteWidget(),
           Text(
             'List of colors:',
             style: Theme.of(context).textTheme.headline4,
           ),
-          SizedBox(
-            height: 300,
-            child: ListView.builder(
-              itemCount: _colors.length,
-              itemBuilder: (BuildContext context, int position) {
-                return Text(_colors[position]);
-              },
-            ),
-          )
+          colorList()
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -89,5 +73,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  SizedBox colorList() {
+    return SizedBox(
+          height: 300,
+          child: ListView.builder(
+            itemCount: _colors.length,
+            itemBuilder: (BuildContext context, int position) {
+              return Text(_colors[position]);
+            },
+          ),
+        );
+  }
+
+  Row voteWidget() {
+    return Row(
+          children: [
+            Text('Enter your color:  '),
+            SizedBox(child: TextField(controller: _favColor,), width: 200,),
+            ElevatedButton(
+                onPressed: _voteButtonClick,
+                child: Text('Vote'))
+          ],
+        );
   }
 }
