@@ -29,12 +29,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  List<String> colors = [];
+  List<String> _colors = [];
+  TextEditingController _favColor = new TextEditingController();
   
   void _actionButtonClick() {
     setState(() {
       print('Action button click');
-      colors.add("blue");
+      _colors.add("blue");
+    });
+  }
+
+  void _voteButtonClick() {
+    setState(() {
+      print('Vote button click');
+      _colors.add(_favColor.text);
     });
   }
 
@@ -47,8 +55,18 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text(
+          Text(
             'What is your favorite color?',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          Row(
+            children: [
+              Text('Enter your color:  '),
+              SizedBox(child: TextField(controller: _favColor,), width: 200,),
+              ElevatedButton(
+                  onPressed: _voteButtonClick,
+                  child: Text('Vote'))
+            ],
           ),
           Text(
             'List of colors:',
@@ -57,9 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(
             height: 300,
             child: ListView.builder(
-              itemCount: colors.length,
+              itemCount: _colors.length,
               itemBuilder: (BuildContext context, int position) {
-                return Text(colors[position]);
+                return Text(_colors[position]);
               },
             ),
           )
