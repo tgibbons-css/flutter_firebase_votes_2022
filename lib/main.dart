@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -31,18 +37,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> _colors = [];
   TextEditingController _favColor = new TextEditingController();
-  
+  final CollectionReference colorListDB = FirebaseFirestore.instance.collection('COLORS');
+
   void _actionButtonClick() {
     setState(() {
       print('Action button click');
       _colors.add("blue");
-    });
-  }
-
-  void _voteButtonClick() {
-    setState(() {
-      print('Vote button click');
-      _colors.add(_favColor.text);
     });
   }
 
@@ -78,13 +78,28 @@ class _MyHomePageState extends State<MyHomePage> {
   SizedBox colorList() {
     return SizedBox(
           height: 300,
-          child: ListView.builder(
-            itemCount: _colors.length,
-            itemBuilder: (BuildContext context, int position) {
-              return Text(_colors[position]);
-            },
+          child: StreamBuilder(
+            stream: colorListDB.snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              return ListView.builder(
+                itemCount: snapshot.data?.docs.length,
+                //itemCount: _colors.length,
+                itemBuilder: (BuildContext context, int position) {
+                  //return Text(_colors[position]);
+                  return Text(snapshot.data?.docs[position]['fav_color']);
+                },
+              );
+            }
           ),
         );
+  }
+  void _voteButtonClick() {
+    setState(() async {
+      print('Vote button click');
+      //_colors.add(_favColor.text);
+      await colorListDB.add({'fav_color': _favColor.text});
+      _favColor.clear();
+    });
   }
 
   Row voteWidget() {
